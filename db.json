@@ -8,7 +8,34 @@
         "current": 0,
         "urlDescr":"https://consumer.huawei.com/ru/phones/p-smart-2021/",
         "urlImage":"https://market.yandex.ru/old/product--smartfon-huawei-p-smart-2021/701582063"
-      }
+      },
+    {
+        "id": 1001,
+        "title": "OPPO Reno 4 Lite",
+        "price": 24990,
+        "rest": 99,
+        "current": 0,
+        "urlDescr":"https://oppo.ru/reno4-lite/",
+        "urlImage":"https://oppo.ru/wp-content/uploads/2020/09/Reno4_Lite_Blue_PP_3.jpg"
+      },
+    {
+        "id": 1002,
+        "title": "Xiaomi Mi 10T Pro",
+        "price": 54000,
+        "rest": 50,
+        "current": 0,
+        "urlDescr":"https://www.mi.com/global/mi-10t-pro/",
+        "urlImage":"https://i01.appmifile.com/webfile/globalimg/products/pc/mi-10t/specs.png"
+      }  ,
+    {
+        "id": 1003,
+        "title": "Google Pixel 5",
+        "price": 56700,
+        "rest": 50,
+        "current": 0,
+        "urlDescr":"https://store.google.com/us/product/pixel_5",
+        "urlImage":"https://avatars.mds.yandex.net/get-mpic/1865219/img_id8096908144486385234.png/orig"
+      }   
   ],
   "posts": [
     {
