@@ -1,4 +1,8 @@
 {
+  "user":{
+    "id": "direct-dev-ru",
+    "name": "Anton Kuznetcov"
+  },
   "products": [
       {
         "id": 1000,
