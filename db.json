@@ -103,6 +103,18 @@
         {
             "Name": "Building the Same Component in Vue2 vs. Vue3",
             "Page": "https://learnvue.co/2020/02/building-the-same-component-in-vue2-vs-vue3/"
+        },
+        {
+            "Name": "4 Vue3 Composition API Tips You Should Know",
+            "Page": "https://learnvue.co/2020/01/4-vue3-composition-api-tips-you-should-know/"
+        },
+        {
+            "Name": "8 Free Vue Icon Libraries to Pretty Up Your Web App",
+            "Page": "https://learnvue.co/2019/12/8-free-vue-icon-libraries-to-pretty-up-your-web-app/"
+        },
+        {
+            "Name": "How and Why to Use Wrapper Components in Vue3",
+            "Page": "https://learnvue.co/2020/02/how-and-why-to-use-wrapper-components-in-vue3/"
         }
     ],
     "products": [
