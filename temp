@@ -1,0 +1,87 @@
+#$sPath = "\\10.207.14.24\g$\Documents\OBMEN"
+$sPath = "V:\"
+# $MaxDepth = 8;
+$MaxDepth = 2;
+$sResultPath = "C:\Temp\FileResourceInfoV.csv"
+
+$ObjectsAll = @(Get-ChildItem -Path $sPath);
+
+
+$ResultSet = @(Get-ChildItem -Path $sPath |`
+            Select-object `
+        @{n = "FullName"; e = { $_.FullName } }, @{n = "Имя объекта"; e = { $_.Name } }, @{n = 'Дата создания объекта'; e = { $_.CreationTime } }, `
+        @{n = 'Дата последнего доступа'; e = { $_.LastAccessTime } }, `
+        @{n = 'Это каталог?'; e = { $_.psIsContainer } }, `
+        @{n = 'Depth'; e = { 1 } }, `
+        @{n = 'Владелец объекта'; e = { (Get-Acl $_.fullname).owner } }, `
+        @{n = 'Размер Mb'; e = { if ($_.psIsContainer) {
+                    $razmer = $((Get-Childitem -path $_.fullname -Recurse -ErrorAction SilentlyContinue | Measure-Object -ErrorAction SilentlyContinue -Property Length -Sum).Sum)
+                }
+                else {
+                    $razmer = $((Get-Childitem -path $_.fullname -ErrorAction SilentlyContinue | Measure-Object -ErrorAction SilentlyContinue -Property Length -Sum).Sum)
+                }
+                return [math]::Round($razmer / 1MB, 3);
+            }
+        });
+
+   
+
+for ($i = 2; $i -le $MaxDepth; $i++) {
+    $ResultSet_Add = $null;
+    $ListOfSubFolders = $ResultSet | where { $_.Depth -eq ($i - 1) -and $_.'Это каталог?' } | select fullname;
+
+    foreach ($SubFolder in $ListOfSubFolders) {
+        write-host $SubFolder.Fullname
+        if ($ResultSet_Add.Count -eq 0) {
+            $ResultSet_Add = @(Get-ChildItem -Path $SubFolder.FullName |`
+                        Select-object `
+                    @{n = "FullName"; e = { $_.FullName } }, @{n = "Имя объекта"; e = { $_.Name } }, @{n = 'Дата создания объекта'; e = { $_.CreationTime } }, `
+                    @{n = 'Дата последнего доступа'; e = { $_.LastAccessTime } }, `
+                    @{n = 'Это каталог?'; e = { $_.psIsContainer } }, `
+                    @{n = 'Depth'; e = { $i } }, `
+                    @{n = 'Владелец объекта'; e = { (Get-Acl $_.fullname).owner } }, `
+                    @{n = 'Размер Mb'; e = { if ($_.psIsContainer) {
+                                $razmer = $((Get-Childitem -path $_.fullname -Recurse -ErrorAction SilentlyContinue | Measure-Object -ErrorAction SilentlyContinue -Property Length -Sum).Sum)
+                            }
+                            else {
+                                $razmer = $((Get-Childitem -path $_.fullname -ErrorAction SilentlyContinue | Measure-Object -ErrorAction SilentlyContinue -Property Length -Sum).Sum)
+                            }
+                            return [math]::Round($razmer / 1MB, 3);
+                        }
+                    });
+        }
+        else {
+            $ResultSet_Add += @(Get-ChildItem -Path $SubFolder.FullName |`
+                        Select-object `
+                    @{n = "FullName"; e = { $_.FullName } }, @{n = "Имя объекта"; e = { $_.Name } }, @{n = 'Дата создания объекта'; e = { $_.CreationTime } }, `
+                    @{n = 'Дата последнего доступа'; e = { $_.LastAccessTime } }, `
+                    @{n = 'Это каталог?'; e = { $_.psIsContainer } }, `
+                    @{n = 'Depth'; e = { $i } }, `
+                    @{n = 'Владелец объекта'; e = { (Get-Acl $_.fullname).owner } }, `
+                    @{n = 'Размер Mb'; e = { if ($_.psIsContainer) {
+                                $razmer = $((Get-Childitem -path $_.fullname -Recurse -ErrorAction SilentlyContinue | Measure-Object -ErrorAction SilentlyContinue -Property Length -Sum).Sum)
+                            }
+                            else {
+                                $razmer = $((Get-Childitem -path $_.fullname -ErrorAction SilentlyContinue | Measure-Object -ErrorAction SilentlyContinue -Property Length -Sum).Sum)
+                            }
+                            return [math]::Round($razmer / 1MB, 3);
+                        }
+                    });
+        }
+                
+    }#foreach
+    $ResultSet += $ResultSet_Add;
+}
+
+$ResultSet | select-object  @{n = "FolderName"; e = { if ($_.'Это каталог?') { $_.FullName }else { [system.io.path]::GetDirectoryName($_.FullName) } } }, `
+@{n = "Полный путь к объекту"; e = { $_.FullName } } , `
+@{n = "Это каталог?"; e = { $_.'Это каталог?' } } , `
+@{n = "Глубина вложенности"; e = { $_.'Depth' } } , `
+@{n = "Дата создания объекта"; e = { $_.'Дата создания объекта' } } , `
+@{n = "Дата последнего доступа"; e = { $_.'Дата последнего доступа' } } , `
+@{n = "Владелец объекта"; e = { $_.'Владелец объекта' } } , `
+@{n = "Размер Mb"; e = { $_.'Размер Mb' } } | `
+    Sort-Object "Полный путь к объекту", "Глубина вложенности", "Это каталог?", "Владелец объекта", "Дата последнего доступа" |`
+
+Export-Csv $sResultPath -Delimiter ";" -Encoding UTF8 -NoTypeInformation
+
