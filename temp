@@ -1,6 +1,4 @@
-#$sPath = "\\10.207.14.24\g$\Documents\OBMEN"
 $sPath = "V:\"
-# $MaxDepth = 8;
 $MaxDepth = 2;
 $sResultPath = "C:\Temp\FileResourceInfoV.csv"
 
